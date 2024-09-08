@@ -1,6 +1,6 @@
 from src.database_utils import *
 
-def rebuildTables():
+def rebuild_tables():
     conn = connect()
     cur = conn.cursor()
     buildUsers(cur)
@@ -8,6 +8,7 @@ def rebuildTables():
     buildGroups(cur)
     buildPassions(cur)
     buildPosts(cur)
+    buildUserToPassions(cur)
     conn.commit()
     conn.close()
 
@@ -37,7 +38,10 @@ def buildComments(cur):
     """
     create_sql="""
         CREATE TABLE comments(
-            commentID SERIAL PRIMARY KEY
+            commentID SERIAL PRIMARY KEY,
+            authorID int,
+            body VARCHAR(5000),
+            postedTime TIMESTAMP default CURRENT_TIMESTAMP
         )
     """
     cur.execute(drop_sql)
@@ -49,7 +53,9 @@ def buildPassions(cur):
     """
     create_sql="""
         CREATE TABLE passions(
-            passionID SERIAL PRIMARY KEY
+            passionID SERIAL PRIMARY KEY,
+            title VARCHAR(80) NOT NULL,
+            description VARCHAR(5000)
         )
     """
     cur.execute(drop_sql)
@@ -61,7 +67,10 @@ def buildPosts(cur):
     """
     create_sql="""
         CREATE TABLE posts(
-            postID SERIAL PRIMARY KEY
+            postID SERIAL PRIMARY KEY,
+            title VARCHAR(80),
+            body VARCHAR(5000),
+            postedTime TIMESTAMP default CURRENT_TIMESTAMP
         )
     """
     cur.execute(drop_sql)
@@ -73,7 +82,22 @@ def buildGroups(cur):
     """
     create_sql="""
         CREATE TABLE groups(
-            groupID SERIAL PRIMARY KEY
+            groupID SERIAL PRIMARY KEY,
+            name VARCHAR(80),
+            description VARCHAR(2000)
+        )
+    """
+    cur.execute(drop_sql)
+    cur.execute(create_sql)
+
+def buildUserToPassions(cur):
+    drop_sql = """
+        DROP TABLE IF EXISTS usersToPassions
+    """
+    create_sql="""
+        CREATE TABLE usersToPassions(
+            userID int,
+            passionID int
         )
     """
     cur.execute(drop_sql)
