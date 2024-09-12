@@ -1,5 +1,5 @@
 import unittest
-from src.venn import *
+from src.venn_command_line import *
 from src.venn_table_builder import *
 from src.database_utils import connect
 
