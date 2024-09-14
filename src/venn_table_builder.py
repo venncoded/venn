@@ -39,7 +39,8 @@ def buildComments(cur):
     create_sql="""
         CREATE TABLE comments(
             commentID SERIAL PRIMARY KEY,
-            authorID int,
+            authorID int NOT NULL,
+            postID int NOT NULL,
             body VARCHAR(5000),
             postedTime TIMESTAMP default CURRENT_TIMESTAMP
         )
@@ -70,6 +71,7 @@ def buildPosts(cur):
             postID SERIAL PRIMARY KEY,
             title VARCHAR(80),
             body VARCHAR(5000),
+            author int,
             postedTime TIMESTAMP default CURRENT_TIMESTAMP
         )
     """
@@ -90,6 +92,8 @@ def buildGroups(cur):
     cur.execute(drop_sql)
     cur.execute(create_sql)
 
+
+#Relationship Table Builder
 def buildUserToPassions(cur):
     drop_sql = """
         DROP TABLE IF EXISTS usersToPassions
